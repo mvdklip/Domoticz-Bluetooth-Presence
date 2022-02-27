@@ -4,7 +4,7 @@
 #
 
 """
-<plugin key="BluetoothPresence" name="Bluetooth Presence" author="mvdklip" version="0.2.1" >
+<plugin key="BluetoothPresence" name="Bluetooth Presence" author="mvdklip" version="0.2.2" >
     <description>
         <h2>Bluetooth presence plugin</h2><br/>
         Detects if a given bluetooth MAC address is within reach of Domoticz<br/>
@@ -59,7 +59,7 @@ class BasePlugin:
                     Domoticz.Debug("Exiting message handler")
                     break
                 elif (Message["Type"] == "Ping"):
-                    Domoticz.Log("handleMessage: '"+Message["Type"]+" "+Message["Address"]+"'.")
+                    Domoticz.Debug("handleMessage: '"+Message["Type"]+" "+Message["Address"]+"'.")
                     if (bluetooth.lookup_name(Message['Address']) is not None):
                         Domoticz.Debug("Pong!")
                         self.lastSeen = 0
@@ -98,11 +98,11 @@ class BasePlugin:
     def onStop(self):
         # Signal queue thread to exit
         self.messageQueue.put(None)
-        Domoticz.Log("Clearing message queue...")
+        Domoticz.Debug("Clearing message queue...")
         self.messageQueue.join()
 
         # Wait until queue thread has exited
-        Domoticz.Log("Threads still active: "+str(threading.active_count())+", should be 1.")
+        Domoticz.Debug("Threads still active: "+str(threading.active_count())+", should be 1.")
         while (threading.active_count() > 1):
             for thread in threading.enumerate():
                 if (thread.name != threading.current_thread().name):
